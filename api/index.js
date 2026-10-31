@@ -31,7 +31,7 @@ app.post('/api/pair',(req,res)=>{
   res.json({ok:true, pairCode: raw.slice(0,4)+"-"+raw.slice(4)}); 
 });
 
-// LOGIN PAGE - 3 BUTTONS - Login + Signup + Forgot
+// FIXED LOGIN - NO LOOP - 3 BUTTONS
 app.get('/',(req,res)=>{
   res.send(`
 <!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,7 +42,7 @@ app.get('/',(req,res)=>{
 <body><div style="background:linear-gradient(90deg,#ff1493,#c3005a);padding:15px;font-weight:bold">🚀 ULTRA X PAWAR VIP HOSTING - Premium</div>
 <div class="card">
 <h2 style="color:#ff69b4">Welcome</h2>
-<input id="email" type="email" placeholder="Gmail - mdr759664@gmail.com" value="mdr759664@gmail.com">
+<input id="email" type="email" placeholder="Gmail" value="mdr759664@gmail.com">
 <input id="pass" type="password" placeholder="Password">
 <button class="btn btn-login" onclick="doLogin()">🔐 Login</button>
 <button class="btn btn-signup" onclick="doSignup()">📝 Sign Up - New Account</button>
@@ -51,7 +51,8 @@ app.get('/',(req,res)=>{
 <div style="margin-top:15px;font-size:11px;color:#888">30 Days Free Trial - After 300 Taka - bKash/Nagad<br>Google SEO Ready - SG-1 PRO - No Sleep</div>
 </div>
 <script>
-const s=localStorage.getItem("pawar_email"); if(s) location.href="/dashboard?email="+s;
+// FIXED - NO AUTO RELOAD LOOP - Bar Bar Page Fix
+// const s=localStorage.getItem("pawar_email"); if(s) location.href="/dashboard?email="+s;
 function doLogin(){ const e=document.getElementById("email").value.trim().toLowerCase(); const p=document.getElementById("pass").value.trim(); if(!e||!p) return msg("Email+Pass দাও!"); fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,pass:p})}).then(r=>r.json()).then(d=>{ msg(d.msg); if(d.ok){ localStorage.setItem("pawar_email",e); location.href="/dashboard?email="+e } }) }
 function doSignup(){ const e=document.getElementById("email").value.trim().toLowerCase(); const p=document.getElementById("pass").value.trim(); if(!e||!p) return msg("Email+Pass দাও Signup এর জন্য!"); fetch("/api/signup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,pass:p})}).then(r=>r.json()).then(d=>{ msg(d.msg); if(d.ok){ localStorage.setItem("pawar_email",e); location.href="/dashboard?email="+e } }) }
 function doForgot(){ const e=document.getElementById("email").value.trim().toLowerCase(); if(!e) return msg("Gmail দাও Forgot এর জন্য!"); const newP=prompt("নতুন Password দাও "+e+" এর জন্য:"); if(!newP) return; fetch("/api/forgot",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,newPass:newP})}).then(r=>r.json()).then(d=>{ msg(d.msg) }) }
@@ -123,7 +124,8 @@ app.post('/api/admin/approve',(req,res)=>{
 app.get('/dashboard',(req,res)=>{
   let email=(req.query.email||"").toLowerCase();
   let u=db.users[email];
-  if(!u) return res.redirect('/');
+  // FIXED - NO REDIRECT LOOP
+  if(!u){ return res.send("<html><body style='background:#1a0a1a;color:#fff;text-align:center;padding:40px'><h1>Login First!</h1><p>No Account Found</p><script>localStorage.clear(); setTimeout(()=>location.href='/',1500)</script><a href='/' style='color:#ff69b4'>Go Login</a></body></html>"); }
   const isOwner=isOwnerEmail(email);
   const daysLeft=isOwner?9999:Math.ceil((u.end-Date.now())/86400000);
   const isExpired=!isOwner && daysLeft<=0;
