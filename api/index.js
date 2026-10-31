@@ -30,7 +30,6 @@ const PAYMENT = {
 };
 
 const GOOGLE_VERIFICATION = "PASTE_YOUR_GOOGLE_CODE_HERE"; 
-
 const OWNER_LIST = ["mdr759664@gmail.com","pawar@gmail.com","01636487523","ultra"];
 function isOwnerEmail(email){ if(!email) return false; email=email.toLowerCase(); return OWNER_LIST.some(o=> email.includes(o.toLowerCase())); }
 
@@ -215,7 +214,7 @@ app.get('/dashboard',(req,res)=>{
   const html=`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="google-site-verification" content="${GOOGLE_VERIFICATION}" /><style>
   body{background:#0a0a0a;color:#e5e5e5;font-family:system-ui;margin:0;display:flex}
   .sidebar{width:220px;background:linear-gradient(180deg,#1a0a1a,#0a0a0a);border-right:1px solid #ff1493;min-height:100vh;padding:15px;position:sticky;top:0}
-  .sidebar a{display:block;padding:10px 12px;color:#ffb6c1;text-decoration:none;border-radius:8px;margin:4px 0;font-size:13px}
+  .sidebar a{display:block;padding:10px 12px;color:#ffb6c1;text-decoration:none;border-radius:8px;margin:4px 0;font-size:13px;cursor:pointer}
   .sidebar a.active{background:linear-gradient(90deg,#ff1493,#ff69b4);color:#fff}
   .main{flex:1;background:linear-gradient(135deg,#0a0a0a,#1a0a1a);min-height:100vh}
   .topbar{background:#1a0a1a;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ff1493;flex-wrap:wrap;gap:8px}
@@ -244,14 +243,14 @@ app.get('/dashboard',(req,res)=>{
     <div style="margin-top:20px;border-top:1px solid #ff1493;padding-top:10px">
       <a href="${LINKS.WHATSAPP_CHANNEL}" target="_blank">💬 <span class="label">WhatsApp</span></a>
       <a href="${LINKS.TELEGRAM_CHANNEL}" target="_blank">✈️ <span class="label">Telegram</span></a>
-      <a href="${LINKS.HOSTING_LINK}" target="_blank">🔗 <span class="label">Share Link</span></a>
+      <a href="javascript:void(0)" onclick="shareHostingLink()">🔗 <span class="label">Share Link</span></a>
       ${adminBtn ? `<div style="margin-top:10px">${adminBtn}</div>` : ''}
     </div>
   </div>
   <div class="main">
     <div class="topbar"><div><b style="color:#ff69b4">${displayName}</b><br><span style="font-size:11px;color:#ffb6c1">SG-1 PRO ✅ No Sleep • UNLIMITED • Rani Golapi Powerful</span></div><div style="display:flex;gap:8px;align-items:center"><span style="background:#1a0a1a;border:1px solid #ff1493;padding:6px 12px;border-radius:20px;font-size:11px;color:#ff69b4">🟢 Online • Singapore • 99.9%</span><button onclick="localStorage.clear();location.href='/'" style="background:#2a0a2a;color:#ff69b4;border:1px solid #ff1493;padding:6px 12px;border-radius:10px;font-size:11px">Logout</button></div></div>
-    <div class="chips"><a class="chip" style="background:linear-gradient(90deg,#ff1493,#ff69b4);color:#fff" href="${LINKS.HOSTING_LINK}" target="_blank">🌐 Hosting Link</a><a class="chip" style="background:#0ea5e9;color:#fff" href="${LINKS.TELEGRAM_BOT_LINK}" target="_blank">📢 Telegram</a><a class="chip" style="background:#22c55e;color:#fff" href="${LINKS.WHATSAPP_CHANNEL}" target="_blank">💬 WhatsApp Channel</a></div>
-    <div id="sec-home" class="koyeb-section active"><div class="card"><h2 style="color:#ff69b4">🏠 Home - Welcome to ULTRA X PAWAR VIP HOSTING</h2><p style="color:#ffb6c1">World's Most Powerful Hosting - No Sleep • Fast Pair • UNLIMITED 💖 Share: ${LINKS.HOSTING_LINK}</p><div style="display:flex;gap:10px;margin-top:15px"><button onclick="showSection('services')" style="padding:10px 20px;background:#ff1493;color:#fff;border:none;border-radius:20px">Myself</button><button onclick="showSection('deploy')" style="padding:10px 20px;background:#2a0a2a;color:#ff69b4;border:1px solid #ff1493;border-radius:20px">School</button><button onclick="showSection('billing')" style="padding:10px 20px;background:#2a0a2a;color:#ff69b4;border:1px solid #ff1493;border-radius:20px">Work</button></div></div><div class="card"><h3>📊 Quick Stats</h3><div style="display:flex;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#ff69b4">${u.bots.length}</b><br><span style="font-size:11px">Services</span></div><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#22c55e">99.9%</b><br><span style="font-size:11px">Uptime</span></div><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#ffd700">UNLIMITED</b><br><span style="font-size:11px">Plan</span></div></div></div></div>
+    <div class="chips"><a class="chip" style="background:linear-gradient(90deg,#ff1493,#ff69b4);color:#fff" href="javascript:void(0)" onclick="shareHostingLink()">🌐 Share Hosting Link</a><a class="chip" style="background:#0ea5e9;color:#fff" href="${LINKS.TELEGRAM_BOT_LINK}" target="_blank">📢 Telegram</a><a class="chip" style="background:#22c55e;color:#fff" href="${LINKS.WHATSAPP_CHANNEL}" target="_blank">💬 WhatsApp Channel</a></div>
+    <div id="sec-home" class="koyeb-section active"><div class="card"><h2 style="color:#ff69b4">🏠 Home - Welcome to ULTRA X PAWAR VIP HOSTING</h2><p style="color:#ffb6c1">World's Most Powerful Hosting - No Sleep • Fast Pair • UNLIMITED 💖<br><br>Hosting Link: <span style="color:#fff;background:#000;padding:4px 8px;border-radius:6px;border:1px solid #ff1493">${LINKS.HOSTING_LINK}</span> <button onclick="shareHostingLink()" style="background:#ff1493;color:#fff;border:none;padding:6px 12px;border-radius:6px;margin-left:6px">📋 Share</button></p><div style="display:flex;gap:10px;margin-top:15px"><button onclick="showSection('services')" style="padding:10px 20px;background:#ff1493;color:#fff;border:none;border-radius:20px">Myself</button><button onclick="showSection('deploy')" style="padding:10px 20px;background:#2a0a2a;color:#ff69b4;border:1px solid #ff1493;border-radius:20px">School</button><button onclick="showSection('billing')" style="padding:10px 20px;background:#2a0a2a;color:#ff69b4;border:1px solid #ff1493;border-radius:20px">Work</button></div></div><div class="card"><h3>📊 Quick Stats</h3><div style="display:flex;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#ff69b4">${u.bots.length}</b><br><span style="font-size:11px">Services</span></div><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#22c55e">99.9%</b><br><span style="font-size:11px">Uptime</span></div><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#ffd700">UNLIMITED</b><br><span style="font-size:11px">Plan</span></div></div></div></div>
     <div id="sec-services" class="koyeb-section"><div class="card"><h3 style="color:#ff69b4">📦 Services - Your Deployments (${u.bots.length})</h3>${servicesHtml}${botsHtml}</div></div>
     <div id="sec-deploy" class="koyeb-section">
       <div class="card"><h3 style="color:#ff69b4">📦 GitHub Repo Deploy - Direct Select (NEW) 💖</h3><input id="ghName" placeholder="Project Name"><input id="ghRepo" placeholder="GitHub Repo URL"><input id="ghBranch" placeholder="Branch - main" value="main"><input id="ghStart" placeholder="Start Command - npm start" value="npm start"><button class="btn-deploy" onclick="deployGithub()">🚀 Deploy GitHub Repo - Direct 💖</button></div>
@@ -295,6 +294,12 @@ app.get('/dashboard',(req,res)=>{
   </div>
   <script>
   function showSection(id){ document.querySelectorAll('.koyeb-section').forEach(s=>s.classList.remove('active')); document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active')); document.getElementById('sec-'+id).classList.add('active'); document.getElementById('nav-'+id).classList.add('active'); }
+  function shareHostingLink(){
+    const link = "${LINKS.HOSTING_LINK}";
+    try{ navigator.clipboard.writeText(link); }catch(e){}
+    alert("✅ Hosting Link Copied: " + link + "\\nএখন Share করতে পারো!");
+    window.open(link, "_blank");
+  }
   let billingMethod='bKash';
   let billBkash='${PAYMENT.BKASH}';
   let billNagad='${PAYMENT.NAGAD}';
