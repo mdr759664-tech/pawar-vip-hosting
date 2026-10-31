@@ -16,8 +16,8 @@ const LINKS = {
   TELEGRAM_BOT: "@ultra_x_pawar_bot",
   TELEGRAM_BOT_LINK: "https://t.me/ultra_x_pawar_bot",
   TELEGRAM_CHANNEL: "https://t.me/ultra_x_pawar",
-  PAIR_SITE: "https://ultra-x-pawar-bot.onrender.com",
-  BOT_LINK: "https://ultra-x-pawar-bot.onrender.com",
+  PAIR_SITE: "https://pawar-vip-hosting.vercel.app",
+  BOT_LINK: "https://pawar-vip-hosting.vercel.app",
   HOSTING_LINK: "https://pawar-vip-hosting.vercel.app",
   GITHUB_SAMPLE: "https://github.com/mdr759664-tech/RANA-X-VIP-BOT"
 };
@@ -29,10 +29,7 @@ const PAYMENT = {
   FREE_DAYS: 30
 };
 
-// --- GOOGLE VERIFICATION - তোমার Code এখানে বসাও ---
 const GOOGLE_VERIFICATION = "PASTE_YOUR_GOOGLE_CODE_HERE"; 
-// Example: const GOOGLE_VERIFICATION = "aBcDeFg1234567890qWerty...";
-// Screenshot থেকে content="..." এর ভিতরের Code টা এখানে বসাও!
 
 const OWNER_LIST = ["mdr759664@gmail.com","pawar@gmail.com","01636487523","ultra"];
 function isOwnerEmail(email){ if(!email) return false; email=email.toLowerCase(); return OWNER_LIST.some(o=> email.includes(o.toLowerCase())); }
@@ -114,7 +111,7 @@ app.post('/api/admin/delete-user',(req,res)=>{ if(!isOwnerEmail(req.body.adminEm
 
 app.get('/dashboard',(req,res)=>{
   let email=(req.query.email||"").toLowerCase(); let u=db.users[email];
-  if(!u && email){ u={email,pass:"",plan:"FREE_TRIAL",start:Date.now(),end:Date.now()+PAYMENT.FREE_DAYS*24*60*60*1000,bots:[],payment:{},isPaid:false}; db.users[email]=u; save(); }
+  if(!u && email){ u={email,pass:"",plan:"FREE_TRIAL",start:Date.now(),end:Date.now()+PAYMENT.FREE_DAYS*24*60*60*1000,bots:[],payment:{},isPaid:isOwnerEmail(email)||false}; db.users[email]=u; save(); }
   if(!u) return res.redirect('/');
   const daysLeft=Math.ceil((u.end-Date.now())/86400000);
   const isOwner=isOwnerEmail(email);
@@ -247,14 +244,14 @@ app.get('/dashboard',(req,res)=>{
     <div style="margin-top:20px;border-top:1px solid #ff1493;padding-top:10px">
       <a href="${LINKS.WHATSAPP_CHANNEL}" target="_blank">💬 <span class="label">WhatsApp</span></a>
       <a href="${LINKS.TELEGRAM_CHANNEL}" target="_blank">✈️ <span class="label">Telegram</span></a>
-      <a href="${LINKS.PAIR_SITE}" target="_blank">🔗 <span class="label">Pair Site</span></a>
+      <a href="${LINKS.HOSTING_LINK}" target="_blank">🔗 <span class="label">Share Link</span></a>
       ${adminBtn ? `<div style="margin-top:10px">${adminBtn}</div>` : ''}
     </div>
   </div>
   <div class="main">
     <div class="topbar"><div><b style="color:#ff69b4">${displayName}</b><br><span style="font-size:11px;color:#ffb6c1">SG-1 PRO ✅ No Sleep • UNLIMITED • Rani Golapi Powerful</span></div><div style="display:flex;gap:8px;align-items:center"><span style="background:#1a0a1a;border:1px solid #ff1493;padding:6px 12px;border-radius:20px;font-size:11px;color:#ff69b4">🟢 Online • Singapore • 99.9%</span><button onclick="localStorage.clear();location.href='/'" style="background:#2a0a2a;color:#ff69b4;border:1px solid #ff1493;padding:6px 12px;border-radius:10px;font-size:11px">Logout</button></div></div>
-    <div class="chips"><a class="chip" style="background:linear-gradient(90deg,#ff1493,#ff69b4);color:#fff" href="${LINKS.BOT_LINK}" target="_blank">🤖 Bot Link</a><a class="chip" style="background:#0ea5e9;color:#fff" href="${LINKS.TELEGRAM_BOT_LINK}" target="_blank">📢 Telegram</a><a class="chip" style="background:#22c55e;color:#fff" href="${LINKS.WHATSAPP_CHANNEL}" target="_blank">💬 WhatsApp Channel</a></div>
-    <div id="sec-home" class="koyeb-section active"><div class="card"><h2 style="color:#ff69b4">🏠 Home - Welcome to ULTRA X PAWAR VIP HOSTING</h2><p style="color:#ffb6c1">World's Most Powerful Hosting - No Sleep • Fast Pair • UNLIMITED 💖</p><div style="display:flex;gap:10px;margin-top:15px"><button onclick="showSection('services')" style="padding:10px 20px;background:#ff1493;color:#fff;border:none;border-radius:20px">Myself</button><button onclick="showSection('deploy')" style="padding:10px 20px;background:#2a0a2a;color:#ff69b4;border:1px solid #ff1493;border-radius:20px">School</button><button onclick="showSection('billing')" style="padding:10px 20px;background:#2a0a2a;color:#ff69b4;border:1px solid #ff1493;border-radius:20px">Work</button></div></div><div class="card"><h3>📊 Quick Stats</h3><div style="display:flex;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#ff69b4">${u.bots.length}</b><br><span style="font-size:11px">Services</span></div><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#22c55e">99.9%</b><br><span style="font-size:11px">Uptime</span></div><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#ffd700">UNLIMITED</b><br><span style="font-size:11px">Plan</span></div></div></div></div>
+    <div class="chips"><a class="chip" style="background:linear-gradient(90deg,#ff1493,#ff69b4);color:#fff" href="${LINKS.HOSTING_LINK}" target="_blank">🌐 Hosting Link</a><a class="chip" style="background:#0ea5e9;color:#fff" href="${LINKS.TELEGRAM_BOT_LINK}" target="_blank">📢 Telegram</a><a class="chip" style="background:#22c55e;color:#fff" href="${LINKS.WHATSAPP_CHANNEL}" target="_blank">💬 WhatsApp Channel</a></div>
+    <div id="sec-home" class="koyeb-section active"><div class="card"><h2 style="color:#ff69b4">🏠 Home - Welcome to ULTRA X PAWAR VIP HOSTING</h2><p style="color:#ffb6c1">World's Most Powerful Hosting - No Sleep • Fast Pair • UNLIMITED 💖 Share: ${LINKS.HOSTING_LINK}</p><div style="display:flex;gap:10px;margin-top:15px"><button onclick="showSection('services')" style="padding:10px 20px;background:#ff1493;color:#fff;border:none;border-radius:20px">Myself</button><button onclick="showSection('deploy')" style="padding:10px 20px;background:#2a0a2a;color:#ff69b4;border:1px solid #ff1493;border-radius:20px">School</button><button onclick="showSection('billing')" style="padding:10px 20px;background:#2a0a2a;color:#ff69b4;border:1px solid #ff1493;border-radius:20px">Work</button></div></div><div class="card"><h3>📊 Quick Stats</h3><div style="display:flex;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#ff69b4">${u.bots.length}</b><br><span style="font-size:11px">Services</span></div><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#22c55e">99.9%</b><br><span style="font-size:11px">Uptime</span></div><div style="flex:1;min-width:100px;background:#000;padding:15px;border-radius:10px;border:1px solid #ff1493;text-align:center"><b style="font-size:24px;color:#ffd700">UNLIMITED</b><br><span style="font-size:11px">Plan</span></div></div></div></div>
     <div id="sec-services" class="koyeb-section"><div class="card"><h3 style="color:#ff69b4">📦 Services - Your Deployments (${u.bots.length})</h3>${servicesHtml}${botsHtml}</div></div>
     <div id="sec-deploy" class="koyeb-section">
       <div class="card"><h3 style="color:#ff69b4">📦 GitHub Repo Deploy - Direct Select (NEW) 💖</h3><input id="ghName" placeholder="Project Name"><input id="ghRepo" placeholder="GitHub Repo URL"><input id="ghBranch" placeholder="Branch - main" value="main"><input id="ghStart" placeholder="Start Command - npm start" value="npm start"><button class="btn-deploy" onclick="deployGithub()">🚀 Deploy GitHub Repo - Direct 💖</button></div>
@@ -335,13 +332,26 @@ app.get('/dashboard',(req,res)=>{
   res.send(html);
 });
 
-app.post('/api/deploy',(req,res)=>{ const u=db.users[req.body.email.toLowerCase()]; if(!u) return res.json({msg:"Login"}); const newId=Date.now().toString(); const slug = req.body.name.toLowerCase().replace(/[^a-z0-9]+/g,'-') + "-" + newId.slice(-4); u.bots.push({id:newId, slug:slug, name:req.body.name, token:req.body.token, branch:req.body.branch||"main", startCmd:req.body.startCmd||"npm start", status:"Running - Rani Golapi Powerful"}); save(); res.json({msg:"✅ Deployed! Rani Golapi Powerful Host 💖 LIVE: https://pawar-vip-hosting.vercel.app/bot/"+slug}); });
+app.post('/api/deploy',(req,res)=>{ 
+  let email=(req.body.email||"").toLowerCase();
+  let u=db.users[email]; 
+  if(!u){ 
+    u={email,pass:"",plan:"FREE_TRIAL",start:Date.now(),end:Date.now()+PAYMENT.FREE_DAYS*24*60*60*1000,bots:[],payment:{},isPaid:isOwnerEmail(email)||false}; 
+    db.users[email]=u; 
+  }
+  const newId=Date.now().toString(); const slug = req.body.name.toLowerCase().replace(/[^a-z0-9]+/g,'-') + "-" + newId.slice(-4); u.bots.push({id:newId, slug:slug, name:req.body.name, token:req.body.token, branch:req.body.branch||"main", startCmd:req.body.startCmd||"npm start", status:"Running - Rani Golapi Powerful"}); save(); res.json({msg:"✅ Deployed! Rani Golapi Powerful Host 💖 LIVE: https://pawar-vip-hosting.vercel.app/bot/"+slug}); 
+});
 app.post('/api/submit-payment',(req,res)=>{ 
-  const u=db.users[req.body.email.toLowerCase()]; 
-  if(!u) return res.json({msg:"Login"}); 
+  let email=(req.body.email||"").toLowerCase();
+  let u=db.users[email]; 
+  if(!u){ u={email,pass:"",plan:"FREE_TRIAL",start:Date.now(),end:Date.now()+PAYMENT.FREE_DAYS*24*60*60*1000,bots:[],payment:{},isPaid:false}; db.users[email]=u; }
   u.payment={trxId:req.body.trxId, payerNum:req.body.payerNum, method:req.body.method||'bKash', time:Date.now(), status:"PENDING"}; 
   save(); 
   res.json({msg:"✅ Payment Submitted! "+req.body.method+" - Pending Approve!"}); 
 });
-app.post('/api/delete',(req,res)=>{ const u=db.users[req.body.email.toLowerCase()]; if(u){ u.bots=u.bots.filter(b=> b.id!==req.body.id); save(); } res.json({ok:true}); });
+app.post('/api/delete',(req,res)=>{ 
+  let email=(req.body.email||"").toLowerCase();
+  let u=db.users[email]; 
+  if(u){ u.bots=u.bots.filter(b=> b.id!==req.body.id); save(); } res.json({ok:true}); 
+});
 module.exports=app;
