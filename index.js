@@ -14,21 +14,18 @@ function save() { fs.writeFileSync(DB_PATH, JSON.stringify(db)); }
 const OWNER_EMAIL = "pawar@gmail.com";
 const SECRET_ADMIN = "/admin-pawar-01837-vip";
 
-// --- SEO - 100% FIXED ---
+// --- SEO ---
 app.get('/robots.txt', (req, res) => {
   res.type('text/plain').send("User-agent: *\nAllow: /\nSitemap: https://pawar-vip-hosting.vercel.app/sitemap.xml");
 });
 app.get('/sitemap.xml', (req, res) => {
-  res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://pawar-vip-hosting.vercel.app/</loc></url></urlset>`);
+  res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://pawar-vip-hosting.vercel.app/</loc><priority>1.0</priority></url></urlset>`);
 });
-
-// এইখানে তোমার GOOGLE CODE টা বসাবে - নিচের content="..." এর ভিতরে
-const GOOGLE_VERIFY_CODE = "google9576568e"; // <-- এখানে HTML tag থেকে Copy করা পুরা কোডটা বসাও
 
 app.get('/', (req, res) => {
   res.send(`
 <!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="google-site-verification" content="${GOOGLE_VERIFY_CODE}" />
+<meta name="google-site-verification" content="toIDvIiHnfJHkhbznHAPLBK3No0vzck-ADveEeF_zZA" />
 <title>Pawar VIP Hosting - Best Bot Hosting BD</title>
 <style>
 body{margin:0;background:#080810;color:#fff;font-family:system-ui;text-align:center}
@@ -50,6 +47,7 @@ input{width:90%;padding:12px;border-radius:8px;border:none;margin:8px 0}
 </div>
 <div class="card" style="border-color:#facc15">
 <h2>🎁 1 Month Free Trial</h2><h1 style="color:#facc15">0 TK</h1>
+<p>✅ সবাই 30 দিন ফ্রি পাবে</p>
 </div>
 <div class="card" style="border-color:gold">
 <h2>💎 VIP PLAN - 300 TK</h2>
@@ -72,7 +70,6 @@ function login(){
 `);
 });
 
-// ... বাকি তোমার কোড একই থাকবে ...
 app.post('/api/login', (req, res) => {
   const { email, pass } = req.body;
   if (!email || !pass) return res.json({ ok: false, msg: "Gmail Pass লাগবে" });
@@ -85,11 +82,13 @@ app.post('/api/login', (req, res) => {
     return res.json({ ok: true });
   }
 });
+
 app.get('/dashboard', (req, res) => {
   const email = req.query.email; const u = db.users[email]; if (!u) return res.redirect('/');
   const left = u.plan === "OWNER-UNLIMITED" ? "UNLIMITED ♾️" : Math.ceil((u.end - Date.now())/(86400000)) + " দিন বাকি";
   res.send(`<html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>body{background:#080810;color:#fff;font-family:system-ui;padding:15px} .card{max-width:500px;margin:auto;background:#1a1a2e;padding:20px;border-radius:15px;border:1px solid #a855f7}</style></head><body><div class="card"><h2>${email}</h2><p>${u.plan} | ${left}</p><hr><h3>🤖 Bot Hosting</h3><input id="botName" placeholder="Bot Name"><textarea id="botCode" rows="6" placeholder="index.js কোড"></textarea><button onclick="deploy()">Deploy</button><div>${u.bots.map(b=>`<p>${b.name} - ${b.status}</p>`).join('')}</div></div><script>function deploy(){fetch('/api/deploy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:'${email}',name:document.getElementById('botName').value,code:document.getElementById('botCode').value})}).then(r=>r.json()).then(d=>{alert(d.msg);location.reload()});}</script></body></html>`);
 });
+
 app.post('/api/deploy', (req, res) => { const { email, name, code } = req.body; const u = db.users[email]; if (!u) return res.json({ msg: "Login করো" }); u.bots.push({ id: Date.now().toString(), name: name || "MyBot", status: "Running", code }); save(); res.json({ msg: "Bot Deploy Success! ✅" }); });
 app.post('/api/bot-action', (req, res) => { const { email, id, act } = req.body; const u = db.users[email]; if (act === "delete") u.bots = u.bots.filter(b=>b.id!==id); else u.bots.forEach(b=>{ if(b.id===id) b.status = act==="start"?"Running":"Stopped"; }); save(); res.json({ msg: act+" done" }); });
 app.get(SECRET_ADMIN, (req, res) => { let html = `<h1 style="color:white">🔐 PAWAR ADMIN</h1><table border=1 cellpadding=8 style="color:white;background:#222;margin:auto"><tr><th>Gmail</th><th>Plan</th><th>Bots</th></tr>`; for (let e in db.users) { const u = db.users[e]; html+=`<tr><td>${e}</td><td>${u.plan}</td><td>${u.bots.length}</td></tr>`; } html+=`</table>`; res.send(html); });
