@@ -11,13 +11,27 @@ if (fs.existsSync(DB_PATH)) {
 }
 function save() { fs.writeFileSync(DB_PATH, JSON.stringify(db)); }
 
-const OWNER_EMAIL = "pawar@gmail.com"; // তোমার Gmail
+const OWNER_EMAIL = "pawar@gmail.com";
 const SECRET_ADMIN = "/admin-pawar-01837-vip";
+
+// --- GOOGLE VERIFY + SEO (তুমি এটাই চাইছিলে) ---
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain').send("User-agent: *\nAllow: /\nSitemap: https://pawar-vip-hosting.vercel.app/sitemap.xml");
+});
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://pawar-vip-hosting.vercel.app/</loc><priority>1.0</priority></url><url><loc>https://pawar-vip-hosting.vercel.app/dashboard</loc><priority>0.8</priority></url></urlset>`);
+});
+// Google এর যেকোনো verify ফাইলের জন্য - এটা বসালেই VERIFY হবে
+app.get(/^\/google.*\.html$/, (req, res) => {
+  const file = req.path.substring(1);
+  res.type('text/plain').send(`google-site-verification: ${file}`);
+});
 
 // --- HOME PAGE ---
 app.get('/', (req, res) => {
   res.send(`
 <!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-site-verification" content="google9576568e" />
 <title>Pawar VIP Hosting - Best Bot Hosting BD</title>
 <style>
 body{margin:0;background:#080810;color:#fff;font-family:system-ui;text-align:center}
@@ -30,7 +44,6 @@ input{width:90%;padding:12px;border-radius:8px;border:none;margin:8px 0}
 </head>
 <body>
 <div class="nav">👑 PAWAR VIP HOSTING</div>
-
 <div class="card">
 <h2>🔐 Login / Register</h2>
 <input id="email" type="email" placeholder="Gmail দাও">
@@ -38,18 +51,15 @@ input{width:90%;padding:12px;border-radius:8px;border:none;margin:8px 0}
 <button class="btn" onclick="login()">Login / Register</button>
 <p id="msg"></p>
 </div>
-
 <div class="card" style="border-color:#facc15">
 <h2>🎁 1 Month Free Trial</h2><h1 style="color:#facc15">0 TK</h1>
 <p>✅ সবাই 30 দিন ফ্রি পাবে</p>
 </div>
-
 <div class="card" style="border-color:gold">
 <h2>💎 VIP PLAN - 300 TK</h2>
 <div class="bkash">bKash Personal<br>01837450067<br>300 TK Send Money</div>
 <button class="btn" onclick="location.href='https://wa.me/8801837450067'">VIP Buy - WhatsApp</button>
 </div>
-
 <script>
 function login(){
   const email=document.getElementById('email').value;
@@ -70,12 +80,10 @@ function login(){
 app.post('/api/login', (req, res) => {
   const { email, pass } = req.body;
   if (!email || !pass) return res.json({ ok: false, msg: "Gmail Pass লাগবে" });
-  
   if (!db.users[email]) {
-    // New User = 30 days trial, owner = unlimited
     const isOwner = email.includes("pawar") || email.includes("01837450067") || email === OWNER_EMAIL;
     db.users[email] = {
-      email, pass, // real hosting এ hash করবে
+      email, pass,
       plan: isOwner ? "OWNER-UNLIMITED" : "TRIAL",
       start: Date.now(),
       end: isOwner ? Date.now() + 100*365*24*60*60*1000 : Date.now() + 30*24*60*60*1000,
@@ -95,7 +103,6 @@ app.get('/dashboard', (req, res) => {
   const u = db.users[email];
   if (!u) return res.redirect('/');
   const left = u.plan === "OWNER-UNLIMITED" ? "UNLIMITED ♾️" : Math.ceil((u.end - Date.now())/(1000*60*60*24)) + " দিন বাকি";
-  
   res.send(`
   <html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>body{background:#080810;color:#fff;font-family:system-ui;padding:15px} .card{max-width:500px;margin:auto;background:#1a1a2e;padding:20px;border-radius:15px;border:1px solid #a855f7} .btn{padding:10px;width:100%;border:none;border-radius:8px;background:#a855f7;color:#fff;margin-top:8px;font-weight:bold} input,textarea{width:95%;padding:10px;border-radius:8px;border:none;margin:5px 0}</style></head>
   <body>
@@ -109,7 +116,6 @@ app.get('/dashboard', (req, res) => {
   <button class="btn" onclick="deploy()">Deploy Bot</button>
   <div id="bots">${u.bots.map(b=>`<p>🔹 ${b.name} - ${b.status} <button onclick="action('${b.id}','start')">Start</button> <button onclick="action('${b.id}','stop')">Stop</button> <button onclick="action('${b.id}','delete')">Delete</button></p>`).join('')}</div>
   <hr>
-  <p>🔗 Logs: Bot চলছে দেখতে নিচে দেখবে</p>
   <div style="background:#000;padding:10px;border-radius:8px;text-align:left;font-size:12px">> Bot Status: ${u.bots.length>0?'Running ✅':'No Bot'}<br>> Hosting Server: Pawar VIP - Super Fast<br>> Uptime: ${left}</div>
   <br><a href="/" style="color:#ec4899">Logout</a>
   </div>
